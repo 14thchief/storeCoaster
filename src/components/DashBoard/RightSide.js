@@ -4,7 +4,8 @@ import React, { useState, useEffect } from "react";
 import CourseStats from "./right-side-components/CourseStats";
 import CourseView from "./right-side-components/CourseView";
 import FileUpload from "./right-side-components/FileUpload";
-import UserStats from "./right-side-components/UserStats";
+import AddCourse from "./right-side-components/AddCourse";
+//import UserStats from "./right-side-components/UserStats";
 import { asyncMockData } from "./right-side-DB/coursesAPI";
 
 
@@ -14,6 +15,31 @@ const RightSide= ()=>{
     useEffect(()=>{
         setProgramData(asyncMockData())
     }, [])
+
+    const [selectedCourse, setSelectedCourse]= useState({});
+    const handleSelectCourse= (courseArr)=>{
+        const courseObj= {
+            id: courseArr[1],
+            title: courseArr[2],
+            description: courseArr[3],
+            image: courseArr[4],
+            modules: courseArr[5],
+            assessment: courseArr[6],
+            status: courseArr[7]
+        };
+        setSelectedCourse(courseObj);
+        const fileUploadDiv= document.getElementById("fileUploadDiv");
+        fileUploadDiv.style.display= "block";
+        fileUploadDiv.scrollIntoView({behavior: "smooth", block: "nearest"});
+    }
+
+    const handleAddCourse = ()=>{
+        const fileUploadDiv= document.getElementById("fileUploadDiv");
+        fileUploadDiv.style.display= "none";
+        const addCourseDiv= document.getElementById("addCourseDiv");
+        addCourseDiv.style.display = addCourseDiv.style.display === "block"? "none": "block";
+        addCourseDiv.scrollIntoView({behavior: "smooth", block: "nearest"});
+    }
 
 
 
@@ -31,7 +57,9 @@ const RightSide= ()=>{
                     <div className="col-lg-4">
 
                         {/*Course Assessment and modules statistics component*/}
+                        
                         <CourseStats data={asyncMockData()} />
+                        
 
                         {/*User statistics component
                         <UserStats />
@@ -65,7 +93,7 @@ const RightSide= ()=>{
                         <div className="row">
                             <div className="col-md-12">
                                 {/*Course View Component */}
-                                <CourseView courses={programData} />
+                                <CourseView courses={programData} handleAddCourse={handleAddCourse} handleSelectCourse={handleSelectCourse} />
                             </div>
                             
                             {/*<div className="modal fade" id="myModal" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -127,8 +155,9 @@ const RightSide= ()=>{
                     {/*Top-Right half of the page ends here */}
 
                     {/*Bottom part containing course module progress and file upload starts here*/}
-                    <div className="col-lg-9 col-lg-offset-3">
-                        <FileUpload />
+                    <div className="col-lg-8 col-lg-offset-4">
+                        <FileUpload targetCourse={selectedCourse} />
+                        <AddCourse />
                     </div>
 
                     {/*Bottom part containing course module progress and file upload starts here*/}

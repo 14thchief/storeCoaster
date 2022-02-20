@@ -18,7 +18,7 @@ const CourseStats= ({data}) =>{
         "data-width":"20", 
         "data-text":`${percentAssessmentPass}%`, 
         "data-fontsize":"20", 
-        "data-percent": `${Math.round(assessmentPassed.length/data.length*100)}`, 
+        "data-percent": `${percentAssessmentPass}`, 
         "data-fgcolor": "#65a800", 
         "data-bgcolor": "#f7f7f7"
     }
@@ -27,13 +27,20 @@ const CourseStats= ({data}) =>{
         id:"myStat2",
         "data-dimension":"210", 
         "data-width":"20", 
-        "data-text":`${Math.round(assessmentPassed.length/data.length*100)}%`, 
+        "data-text":`${percentAssessmentPass}%`, 
         "data-fontsize":"20", 
-        "data-percent": `${Math.round(assessmentPassed.length/data.length*100)}`, 
+        "data-percent": `${percentAssessmentPass}`, 
         "data-fgcolor": "#65a800", 
         "data-bgcolor": "#f7f7f7"
     }
-    console.log(assessmentAttributes)
+    //console.log(assessmentAttributes)
+
+    window.addEventListener("load", ()=>{
+        const divSpan= document.getElementById("myStat3").querySelector("span");
+        divSpan.innerHTML= `${percentAssessmentPass}%`;
+        
+
+    })
 
 
 

@@ -8,7 +8,7 @@ const Header= ()=>{
             <div className="se-pre-con"></div>
             {/*<!-- header logo: style can be found in header-->*/}
             <header className="header">
-                <nav className="navbar navbar-static-top">
+                <nav className="navbar navbar-static-top" style={{display: "flex", alignItems: "center"}}>
                     <a href="index-2.html" className="logo">
                         {/*<!-- Add the className icon to your logo image or logo icon to add the margining -->*/}
 
@@ -16,11 +16,11 @@ const Header= ()=>{
                     {/*<!-- Header Navbar: style can be found in header-->
                     <!-- Sidebar toggle button-->
                     <!-- Sidebar toggle button-->*/}
-                    <div>
-                        <a href="#" className="navbar-btn sidebar-toggle" data-toggle="offcanvas" role="button"> <i className="fa fa-fw fa-navicon"></i>
+                    <div style={{width: "90%", display: "inline-block"}}>
+                        <a href="#" className="navbar-btn sidebar-toggle" data-toggle="offcanvas" role="button"> <i className="fa fa-fw fa-navicon" style={{fontSize: "50px"  }}></i>
                         </a>
                     </div>
-                    <div className="navbar-right">
+                    <div className="navbar-right" style={{ marginRight: "0%"}}>
                         <ul className="nav navbar-nav">
 
                             {/*<!--tasks-->
@@ -30,8 +30,8 @@ const Header= ()=>{
                             <!-- User Account: style can be found in dropdown-->*/}
                             <li className="dropdown user user-menu">
                                 <a href="#" className="dropdown-toggle padding-user" data-toggle="dropdown">
-                                    <i className="fas fa-user-circle fa-2x"></i>
-                                    <i className="caret"></i>
+                                    <i className="fas fa-user-circle fa-2x" style={{fontSize: "50px"}}></i>
+                                    <i className="caret" style={{fontSize: "10px", position: "relative", right: "3%"}}></i>
                                     <div className="riot">
                                         <div>
                                             <span>

@@ -5,7 +5,7 @@ import React from 'react';
 const SideBar= ()=> {
 
     return(
-        <aside className="left-side sidebar-offcanvas">
+        <aside className="left-side sidebar-offcanvas" style={{minHeight: "100vh", height: "100%", marginTop: "-4%"}}>
             {/*sidebar: style can be found in sidebar*/}
             <section className="sidebar">
                 <div id="menu" role="navigation">
