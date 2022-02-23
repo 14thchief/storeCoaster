@@ -1,20 +1,64 @@
 /**
  * This is where data is produced to feed the components state
  */
-//import axios from 'axios';
+import axios from "axios";
 
+const baseURL= "http://localhost:8000/api";
 
-/*const fetchAPIData= async()=>{
+export const fetchAllCourses= async()=>{ //returns array of course details objects [{}, {}]
 
-    return axios.get('http://localhost:3001/api/allcourses')
-    .then(data=>{
-        return data;
+    return await axios.get(`${baseURL}/courses`)
+    .then(response=>{
+        return response.data; //list of all courses
     })
 
-}*/
+}
+
+export const addNewCourse= async({title, description, img, module, assessment})=>{ //returns data {success: true}
+    console.log({"formData at API": {
+        title, 
+        description,
+        img,
+        module,
+        assessment
+    }})
+    /*return await axios.post(`${baseURL}/add-new-courses`,
+        {
+            title, 
+            description,
+            img,
+            module,
+            assessment
+        },
+        {
+            headers: {"content-type": "multipart/form-data"}
+        }
+    )
+    .then(response=>{
+        return response.data
+    })*/
+}
+
+export const addNewModule= async(moduleFile)=>{
+
+    return await axios.post(`${baseURL}/modules`, moduleFile)
+    .then(response=>{
+        return response.data
+    })
+}
 
 
-export const asyncMockData= ()=>{
+
+
+
+
+
+
+
+
+
+
+export const asyncMockData= ()=>{// returns mock data of all courses
 
     const coursesArray= [
         {
@@ -178,7 +222,7 @@ export const asyncMockData= ()=>{
                 },
             ],
             isAssessmentPassed: false
-        },
+        },/*
         
         {
             id: 6,
@@ -188,8 +232,7 @@ export const asyncMockData= ()=>{
             modules: [
                 {
                     title: "test_module",
-                    quizScore: 75,
-                    quizStatus: "pass",
+                    quizScore: 75,7878787                
                     course_id: 6
                 },
                 {
@@ -261,11 +304,9 @@ export const asyncMockData= ()=>{
                 },
             ],
             isAssessmentPassed: false
-        },
+        },*/
         
     ]
 
     return coursesArray;
-}
-
-export default asyncMockData;
+};

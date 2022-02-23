@@ -3,20 +3,26 @@
 import React, { useState, useEffect } from "react";
 import CourseStats from "./right-side-components/CourseStats";
 import CourseView from "./right-side-components/CourseView";
-import FileUpload from "./right-side-components/FileUpload";
+import ModuleUpload from "./right-side-components/ModuleUpload";
 import AddCourse from "./right-side-components/AddCourse";
 //import UserStats from "./right-side-components/UserStats";
-import { asyncMockData } from "./right-side-DB/coursesAPI";
+import { asyncMockData, fetchAllCourses, addNewCourse, addNewModule } from "./right-side-DB/coursesAPI";
 
 
 const RightSide= ()=>{
-
-    const [programData, setProgramData]= useState([]);
+    const [selectedCourse, setSelectedCourse]= useState({});
+    const [allCourses, setAllCourses]= useState([]);
     useEffect(()=>{
-        setProgramData(asyncMockData())
+        /**
+         * fetchAllCourses()
+         * .then(data=>{
+         *    setAllCourses(data)
+         * })
+         */
+        setAllCourses(asyncMockData())
     }, [])
 
-    const [selectedCourse, setSelectedCourse]= useState({});
+    
     const handleSelectCourse= (courseArr)=>{
         const courseObj= {
             id: courseArr[1],
@@ -29,16 +35,50 @@ const RightSide= ()=>{
         };
         setSelectedCourse(courseObj);
         const fileUploadDiv= document.getElementById("fileUploadDiv");
+        const addCourseDiv= document.getElementById("addCourseDiv");
+        addCourseDiv.style.display= "none";
         fileUploadDiv.style.display= "block";
         fileUploadDiv.scrollIntoView({behavior: "smooth", block: "nearest"});
     }
 
-    const handleAddCourse = ()=>{
+    const handleClickAddCourse = ()=>{
         const fileUploadDiv= document.getElementById("fileUploadDiv");
         fileUploadDiv.style.display= "none";
         const addCourseDiv= document.getElementById("addCourseDiv");
         addCourseDiv.style.display = addCourseDiv.style.display === "block"? "none": "block";
         addCourseDiv.scrollIntoView({behavior: "smooth", block: "nearest"});
+    }
+
+    const handleUploadCourse= (formObject)=>{
+        /**on UploadCourse button click
+         * formdata is collected as formValue
+         * uploadCourseAPI is called with formValue and formData for server is created
+         * server: formData is inserted to allCourses table
+         * all courses are refetched and set
+         */
+        addNewCourse(formObject)
+        /*.then(data=>{
+            if (data.success){
+              window.alert("Course added successfully!")
+            }
+            return fetchAllCourses()
+        })
+        .then(data=> setAllCourses(data))*/
+        
+    }
+
+    const handleUploadModule= (moduleFile)=>{
+        return addNewModule(moduleFile)
+        .then(data=>{
+            if(data.success) return window.alert("Module uploaded successfully")
+        })
+        .then(refetch=>{
+            fetchAllCourses()
+            .then(data=>{
+                setAllCourses(data)
+                return "success"
+            })
+        })
     }
 
 
@@ -55,7 +95,8 @@ const RightSide= ()=>{
 
                     {/*Top-Left half of the page starts here */}
                     <div className="col-lg-4">
-
+                        <h2>Courses</h2>
+                        <h3 style={{color: "deepskyblue", fontWeight: "bold", fontSize: "18px"}}>Dashboard<span style={{color: "grey", }} >/Courses</span></h3>
                         {/*Course Assessment and modules statistics component*/}
                         
                         <CourseStats data={asyncMockData()} />
@@ -93,7 +134,7 @@ const RightSide= ()=>{
                         <div className="row">
                             <div className="col-md-12">
                                 {/*Course View Component */}
-                                <CourseView courses={programData} handleAddCourse={handleAddCourse} handleSelectCourse={handleSelectCourse} />
+                                <CourseView courses={allCourses} handleAddCourse={handleClickAddCourse} handleSelectCourse={handleSelectCourse} />
                             </div>
                             
                             {/*<div className="modal fade" id="myModal" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -156,8 +197,8 @@ const RightSide= ()=>{
 
                     {/*Bottom part containing course module progress and file upload starts here*/}
                     <div className="col-lg-8 col-lg-offset-4">
-                        <FileUpload targetCourse={selectedCourse} />
-                        <AddCourse />
+                        <ModuleUpload targetCourse={selectedCourse} handleUploadModule={handleUploadModule} />
+                        <AddCourse handleUploadCourse={handleUploadCourse}/>
                     </div>
 
                     {/*Bottom part containing course module progress and file upload starts here*/}

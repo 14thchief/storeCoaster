@@ -6,11 +6,11 @@ const CourseView= ({courses, handleSelectCourse, handleAddCourse})=>{
 
     const handleCourseHighlight= (e)=>{
         const row= e.target.parentNode; //The whole row
-        let selectBox= row.querySelector("td"); //the first td eleement of each row: the select box
-
-        const allSelectBox= document.getElementsByTagName("td"); //ALL td element of the table
+        let selectBox= row.querySelector("td"); //the first td element of each selected row: the select box
         const otherBoxes= []; //all other td elements of the selected row
 
+        const allSelectBox= document.getElementsByTagName("td"); //ALL td element of the table
+        
         
         /**Styling: for highlight of selected row */
         for (const box of allSelectBox){  //reset all other cell highlight
@@ -34,7 +34,7 @@ const CourseView= ({courses, handleSelectCourse, handleAddCourse})=>{
 
     
     return (
-        <div className="box-model" style={{display: "flex", flexDirection: "column"}}>
+        <div className="box-model" style={{display: "flex", flexDirection: "column", marginBottom: "2%"}}>
             <div style={{display: "flex", justifyContent:"space-between", alignItems: "center"}}>
                 <h4>COURSE VIEW</h4>
                 <button onClick={handleAddCourse} style={{margin: "3%", backgroundColor:"navy", color: "white", width:"30%", maxWidth: "30%", minWidth: "fit-content", minHeight: "7vh", fontSize: "18px", borderRadius: "50px"}}>Add Course</button>

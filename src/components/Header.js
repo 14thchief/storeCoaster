@@ -4,23 +4,19 @@ const Header= ()=>{
 
 
     return(
-        <div style={{display: "block"}}>
+        <div style={{display: "block", minWidth: "80%", width:"83vw", float: "right"}}>
             <div className="se-pre-con"></div>
             {/*<!-- header logo: style can be found in header-->*/}
             <header className="header">
-                <nav className="navbar navbar-static-top" style={{display: "flex", alignItems: "center"}}>
-                    <a href="index-2.html" className="logo">
-                        {/*<!-- Add the className icon to your logo image or logo icon to add the margining -->*/}
-
-                    </a>
+                <nav className="navbar navbar-static-top" style={{display: "flex", alignItems: "center", backgroundColor: "whiteSmoke", width: "100%"}}>
                     {/*<!-- Header Navbar: style can be found in header-->
                     <!-- Sidebar toggle button-->
                     <!-- Sidebar toggle button-->*/}
-                    <div style={{width: "90%", display: "inline-block"}}>
-                        <a href="#" className="navbar-btn sidebar-toggle" data-toggle="offcanvas" role="button"> <i className="fa fa-fw fa-navicon" style={{fontSize: "50px"  }}></i>
+                    <div style={{width: "92%", display: "inline-block", }}>
+                        <a href="#" className="navbar-btn sidebar-toggle" data-toggle="offcanvas" role="button"> <i className="fa fa-fw fa-navicon" style={{fontSize: "40px", color: "midnightBlue"}}></i>
                         </a>
                     </div>
-                    <div className="navbar-right" style={{ marginRight: "0%"}}>
+                    <div className="navbar-right" >
                         <ul className="nav navbar-nav">
 
                             {/*<!--tasks-->
