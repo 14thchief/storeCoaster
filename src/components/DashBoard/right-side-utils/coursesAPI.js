@@ -3,45 +3,72 @@
  */
 import axios from "axios";
 
-const baseURL= "http://localhost:8000/api";
+//const baseURL= "http://3.10.53.138//var/www/paintball/rollercoster/public/api";
+const baseURL= "https://test.litepahmultimedia.com/public/api"
 
 export const fetchAllCourses= async()=>{ //returns array of course details objects [{}, {}]
 
     return await axios.get(`${baseURL}/courses`)
     .then(response=>{
-        return response.data; //list of all courses
+        console.log(response);
+        const data= [];
+        response.data.forEach(course=>{
+            const { courseID, title, description, img, status} = course;
+            data.push({
+                course_id: courseID,
+                title,
+                description,
+                image: img,
+                assessment: status === "Completed"? true : false
+            })
+        })
+        
+        return data; //list of all courses
     })
 
 }
 
-export const addNewCourse= async({title, description, img, module, assessment})=>{ //returns data {success: true}
+export const fetchAllModules= async()=>{ //returns array of module details objects [{}, {}]
+
+    return await axios.get(`${baseURL}/modules`)
+    .then(response=>{
+        const data= [];
+        response.data.map(module=>{
+            return data.push({
+                ...module,
+                course_id: module.courseID
+            })
+        })
+        return data; //list of all modules
+    })
+
+}
+
+export const addNewCourse= async({title, description, img, moduleFile, assessment})=>{ //returns data {success: true}
     console.log({"formData at API": {
         title, 
         description,
         img,
-        module,
+        moduleFile,
         assessment
     }})
-    /*return await axios.post(`${baseURL}/add-new-courses`,
+    return await axios.post(`${baseURL}/add-new-courses`,
         {
             title, 
             description,
             img,
-            module,
+            moduleFile,
             assessment
-        },
-        {
-            headers: {"content-type": "multipart/form-data"}
         }
     )
     .then(response=>{
-        return response.data
-    })*/
+        return response.ok? response.data : window.alert("Error Adding course, try again!")
+    })
 }
 
-export const addNewModule= async(moduleFile)=>{
+export const addNewModule= async(moduleFile, courseID)=>{
 
-    return await axios.post(`${baseURL}/modules`, moduleFile)
+    return await axios.post(`${baseURL}/modules`, {file: moduleFile, courseID: courseID})
     .then(response=>{
         return response.data
     })
@@ -58,7 +85,7 @@ export const addNewModule= async(moduleFile)=>{
 
 
 
-export const asyncMockData= ()=>{// returns mock data of all courses
+export const asyncMockData= async()=>{// returns mock data of all courses
 
     const coursesArray= [
         {
@@ -86,7 +113,7 @@ export const asyncMockData= ()=>{// returns mock data of all courses
                     course_id: 0
                 },
             ],
-            isAssessmentPassed: true
+            assessment: true
         },
         {
             id: 1,
@@ -113,7 +140,7 @@ export const asyncMockData= ()=>{// returns mock data of all courses
                     course_id: 1
                 },
             ],
-            isAssessmentPassed: true
+            assessment: true
         },
         {
             id: 2,
@@ -140,7 +167,7 @@ export const asyncMockData= ()=>{// returns mock data of all courses
                     course_id: 2
                 },
             ],
-            isAssessmentPassed: false
+            assessment: false
         },
         {
             id: 3,
@@ -167,7 +194,7 @@ export const asyncMockData= ()=>{// returns mock data of all courses
                     course_id: 3
                 },
             ],
-            isAssessmentPassed: false
+            assessment: false
         },
         {
             id: 4,
@@ -194,7 +221,7 @@ export const asyncMockData= ()=>{// returns mock data of all courses
                     course_id: 4
                 },
             ],
-            isAssessmentPassed: false
+            assessment: false
         },
         {
             id: 5,
@@ -221,7 +248,7 @@ export const asyncMockData= ()=>{// returns mock data of all courses
                     course_id: 5
                 },
             ],
-            isAssessmentPassed: false
+            assessment: false
         },/*
         
         {
@@ -248,7 +275,7 @@ export const asyncMockData= ()=>{// returns mock data of all courses
                     course_id: 6
                 },
             ],
-            isAssessmentPassed: false
+            assessment: false
         },
         
         {
@@ -276,7 +303,7 @@ export const asyncMockData= ()=>{// returns mock data of all courses
                     course_id: 7
                 },
             ],
-            isAssessmentPassed: false
+            assessment: false
         },
         {
             id: 8,
@@ -303,10 +330,19 @@ export const asyncMockData= ()=>{// returns mock data of all courses
                     course_id: 8
                 },
             ],
-            isAssessmentPassed: false
+            assessment: false
         },*/
         
     ]
 
     return coursesArray;
 };
+
+export const mockModuleData= async()=>{
+    return (
+        [
+            {course_id: 0,}, {course_id: 0,}, {course_id: 0,}, {course_id: 1}, {course_id: 3}
+            , {course_id: 1}, {course_id: 1}, {course_id: 3}, {course_id: 3}
+        ]
+    )
+}

@@ -1,33 +1,39 @@
 import React from "react";
 
 
-const CourseView= ({courses, handleSelectCourse, handleAddCourse})=>{
+const CourseView= ({allCourses, allModules, handleSelectCourse, handleAddCourse})=>{
 
+    const moduleCounter= (course)=>{
+        const modulesOfCourse= allModules.map(modules=>{
+            return course.course_id === modules.course_id
+        })
+        return modulesOfCourse.length;
+    }
 
     const handleCourseHighlight= (e)=>{
         const row= e.target.parentNode; //The whole row
         let selectBox= row.querySelector("td"); //the first td element of each selected row: the select box
-        const otherBoxes= []; //all other td elements of the selected row
+        const otherBoxes= []; //all other td elements of the selected row (to be styled differently)
 
-        const allSelectBox= document.getElementsByTagName("td"); //ALL td element of the table
+        const allSelectBox= document.getElementsByTagName("td"); //ALL [non-selected] td element of the table (to be styled differently)
         
         
         /**Styling: for highlight of selected row */
-        for (const box of allSelectBox){  //reset all other cell highlight
+        for (const box of allSelectBox){  //reset all other box highlight style
             box.style.backgroundColor= "white";
             selectBox.style.backgroundColor = "blue"; //set highlighted selectSpace: i.e. the first and empty cell of the row
         }
 
-        while(selectBox.nextElementSibling){  //get the remaining cells of the row and 
+        while(selectBox.nextElementSibling){  //get the remaining cells of the selected row and style them 
             otherBoxes.push(selectBox.nextElementSibling);
             selectBox= selectBox.nextElementSibling;
-            otherBoxes.forEach(box=> box.style.backgroundColor= "#999900");
+            otherBoxes.forEach(box=> box.style.backgroundColor= "#999900"); //styling of other boxes in selected row
         }
 
-        /** Functionality: for setting parent Component state with selected row's data */
+        /** Functionality: for setting parent (RightSide.js) Component state with selected row's data */
         const dataArr= [];
-        for (const data of row.children){
-            dataArr.push(data.innerHTML)
+        for (const box of row.children){
+            dataArr.push(box.innerHTML)
         }
         handleSelectCourse(dataArr); //handler
     }
@@ -56,18 +62,18 @@ const CourseView= ({courses, handleSelectCourse, handleAddCourse})=>{
                     </thead>
                     <tbody id="tableBody">
                         {
-                            courses.map((course, i)=>{
+                            allCourses.map((course, i)=>{
                                 const isImage= course.image? "IMAGE" : "NO IMAGE";
-                                const isAssessmentPassed= course.isAssessmentPassed? "Passed": "Not passed";
+                                const isAssessmentPassed= course.assessment? "Passed": "Not passed";
                                 const isCourseStatus= isAssessmentPassed === "Passed"? "COMPLETED": "NOT COMPLETED";
                                 return (
-                                    <tr key={i || course.id} id={`course${i}`} >
+                                    <tr key={i} id={`course${i}`} >
                                         <td style={{backgroundColor: "white", border: "1px solid grey"}} ></td>
-                                        <td>{i || course.id}</td>
+                                        <td>{course.course_id}</td>
                                         <td>{course.title}</td>
                                         <td>{course.description}</td>
                                         <td>{isImage}</td>
-                                        <td>{course.modules.length}</td>
+                                        <td>{moduleCounter(course)}</td>
                                         <td>{isAssessmentPassed}</td>
                                         <td>{isCourseStatus}</td>
                                     </tr>

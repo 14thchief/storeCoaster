@@ -7,19 +7,22 @@
 import { useState } from "react";
 
 const FileUpload= ({targetCourse, handleUploadModule})=>{
-    const [moduleFile, setModuleFile]= useState({})
+    const [moduleFile, setModuleFile]= useState({}) //CHECKED old
 
 
-    const courseName= targetCourse.title;
-    const moduleTitleFromZipFile= "";
+    const courseName= targetCourse.title; //CHECKED
+    const courseID= targetCourse.course_id; //CHECKED
+    const moduleTitleFromZipFile= moduleFile.name? moduleFile.name : ""; //CHECKED
+
+    /**Lauch test functionalities */ //UNCHECKED IMPORTANT IMPLEMENTATION
     const moduleTestResult= "blank"|| "pass" || "fail"; /**range of result to be gotten from API moduleTestCall*/
     const resultBasedColor= moduleTestResult === "pass"? "green" : "red";
 
-    const handleChange= (e)=>{
+    const handleChange= (e)=>{ //CHECKED
         e.preventDefault()
         if(!document.getElementById("zip-file").files[0]) return;
 
-        const file= document.getElementById("zip-file").files[0];
+        const file= document.getElementById("zip-file").files[0]; //zipfile about to be uploaded
         console.log(file);
         if (file.type !== "application/x-zip-compressed") {
             window.alert(`Please upload only zip file, you uploaded "${file.type}" instead!`)
@@ -28,17 +31,21 @@ const FileUpload= ({targetCourse, handleUploadModule})=>{
         else{setModuleFile(file)}
     }
 
-    const handleSubmit= (e)=>{
+    const handleSubmit= (e)=>{ //CHECKED
         e.preventDefault()
-
         console.log(moduleFile)
-        handleUploadModule(moduleFile)
-        /*.then(response=>{
-            if(response === "success"){*/
+
+        return handleUploadModule(moduleFile, courseID)
+        .then(response=>{
+            if(response === "success"){
                 document.getElementById("zip-file").value= null;
                 setModuleFile({})
-        /*    }
-        })*/
+                window.alert("Click 'launch test' to view module")
+            }
+            else{
+                window.alert("Upload unsuccessful, Please try again")
+            }
+        })
     }
 
 
@@ -48,8 +55,8 @@ const FileUpload= ({targetCourse, handleUploadModule})=>{
             <h2 style={{fontSize: "20px", display: "inline-block", color: "navy" }}>Course: <span style={{color: "black"}}>{courseName}</span></h2>
             <h2 onClick={()=>{document.getElementById("fileUploadDiv").style.display = "none"}} style={{color: "red", position: "absolute", top:"30px", right:"50px"}}>x</h2>
             <br/>
-            <div style={{display: "flex", alignItems: "center", borderTop: "2px green solid", height: "25vh"}} >
-                <h2 style={{fontSize: "18px", color: "blue", marginRight: "10%" }}>Module: <span style={{color: "black"}}>{moduleFile.name || moduleTitleFromZipFile}</span></h2>
+            <div className="row" style={{display: "flex", alignItems: "center", borderTop: "2px green solid", height: "25vh"}} >
+                <h2 style={{fontSize: "18px", color: "blue", marginRight: "10%" }}>Module: <span style={{color: "black"}}>{moduleTitleFromZipFile}</span></h2>
                 <br/>
                 <button style={{backgroundColor: "green", color:"white", minWidth:"fit-content", width:"20%", height: "max-content", minHeight: "7vh", maxHeight: "7vh", marginRight: "4%", borderRadius: "18px" }}>Launch test</button> {/**button to call testModuleForCompleteness API with (un)zipfile as payload */}
                 <h3 style={{fontSize: "16px"}}>Test result: </h3>

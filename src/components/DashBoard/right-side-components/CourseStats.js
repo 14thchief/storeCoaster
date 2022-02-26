@@ -1,66 +1,60 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import Chart from 'react-apexcharts';
+import { chartState, modulesChartState } from "../right-side-utils/chart";
 
 
 
-const CourseStats= ({data}) =>{
+
+
+const CourseStats= ({courseData, moduleData}) =>{
 
     //Getting assessment statistics
-    const assessmentPassed= data.filter(course=>{
-        return course.isAssessmentPassed
+    const assessmentPassed= courseData.filter(course=>{
+        return course.assessment
     })
-
-    const percentAssessmentPass= Math.round((assessmentPassed.length/data.length) * 100);
-
+    const modulesPassed= [];
+    courseData.forEach(course=> {
+        if(course.assessment){
+            const completedModules= moduleData.filter(module=> module.course_id === course.course_id)
+            modulesPassed.push(...completedModules);
+        }
+    })
     
-    const assessmentAttributes={
-        id:"myStat3",
-        "data-dimension":"210", 
-        "data-width":"20", 
-        "data-text":`${percentAssessmentPass}%`, 
-        "data-fontsize":"20", 
-        "data-percent": `${percentAssessmentPass}`, 
-        "data-fgcolor": "#65a800", 
-        "data-bgcolor": "#f7f7f7"
-    }
+    const [chart, setChart]= useState(chartState)
+    useEffect(()=>{
+        setChart((preValue)=>{
+            return {series: [assessmentPassed.length, (courseData.length - assessmentPassed.length)], options: {...preValue.options }}
+        })
+    }, [courseData.length, assessmentPassed.length])
 
-    const modulesAttributes={
-        id:"myStat2",
-        "data-dimension":"210", 
-        "data-width":"20", 
-        "data-text":`${percentAssessmentPass}%`, 
-        "data-fontsize":"20", 
-        "data-percent": `${percentAssessmentPass}`, 
-        "data-fgcolor": "#65a800", 
-        "data-bgcolor": "#f7f7f7"
-    }
-    //console.log(assessmentAttributes)
 
-    window.addEventListener("load", ()=>{
-        const divSpan= document.getElementById("myStat3").querySelector("span");
-        divSpan.innerHTML= `${percentAssessmentPass}%`;
-        
+    const [moduleChart, setModuleChart]= useState(modulesChartState)
+    useEffect(()=>{
+        setModuleChart((prev)=>{
+            return {series: [modulesPassed.length, moduleData.length- modulesPassed.length], options: {...prev.options}}
+        })
+    }, [modulesPassed.length, moduleData.length])
 
-    })
+    console.log(assessmentPassed.length, courseData.length);
 
 
 
     return (
         <div className="box-model">
-            <h4>Quick Stats</h4>
-            <div className="row">
-                <div className="col-lg-6 col-xs-6 text-center">
-                    <p className="income">Modules Complete</p>
-                    <div id="myStat2" data-dimension="210" data-width="20" data-text="50%" data-fontsize="20" data-percent="50" data-fgcolor="#33a4d8" data-bgcolor="#f7f7f7"></div>
+            <h4>Program: Rollercoaster</h4>
+            <div className="row" style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent:"center"}}>
+                <div className="col-lg-6 col-xs-6 text-center" style={{backgroundColor: "", display: "flex", justifyContent:"center"}}>
+                    <Chart options={chart.options} series={chart.series} type="donut" width="340" />
                 </div>
-                <div className="col-lg-6 col-xs-6 text-center">
-                    <p className="income">Assessment Passed</p>
-                    <div {...assessmentAttributes}></div>
+                <div className="col-lg-6 col-xs-6 text-center justify-start" style={{border: "2px solid red", display: "flex", justifyContent:"center"}}>
+                    <Chart options={moduleChart.options} series={moduleChart.series} type="donut" width="200" />
                 </div>
+                
             </div>
             <div className="row">
-                <div className="col-lg-10 col-xs-12">
+                <div className="col-lg-10 col-xs-12 d-flex justify-start">
                     <div className="amount">
-                        <p>Assessment passed <span className="pull-right"></span><span id="" className="pull-right">{`${assessmentPassed.length} out of ${data.length}`}</span>
+                        <p>Assessment passed <span className="pull-right"></span><span id="" className="pull-right">{`${assessmentPassed.length}/ ${courseData.length}`}</span>
                         </p>
                         <div className="progress progress-striped active">
                             <div className="progress-bar progress-bar-primary"></div>
